@@ -23,6 +23,7 @@ import { PkCore, MsConf } from "@symlinkde/eco-os-pk-models";
 import { serviceContainer, ECO_OS_PK_CORE_TYPES } from "@symlinkde/eco-os-pk-core";
 import { PkStorage } from "@symlinkde/eco-os-pk-models";
 import { STORAGE_TYPES } from "./StorageTypes";
+import { Log, LogLevel } from "@symlinkde/eco-os-pk-log";
 
 @injectable()
 export class MongoConnector implements PkStorage.IMongoConnector {
@@ -51,6 +52,9 @@ export class MongoConnector implements PkStorage.IMongoConnector {
     if (!this.connection) {
       this.connection = await MongoClient.connect(mongoConfig[this.storage], {
         useNewUrlParser: true,
+        useUnifiedTopology: true,
+        reconnectTries: 60,
+        reconnectInterval: 1000,
       });
     }
 
@@ -67,7 +71,13 @@ export class MongoConnector implements PkStorage.IMongoConnector {
   }
 
   private async getMongoURI(): Promise<MsConf.IConfigEntry> {
-    const result = await this.configClient.get(this.storage);
-    return result.data;
+    try {
+      const result = await this.configClient.get(this.storage);
+      return result.data;
+    } catch (err) {
+      Log.log(err, LogLevel.error);
+      process.exit(1);
+      throw new Error(err);
+    }
   }
 }

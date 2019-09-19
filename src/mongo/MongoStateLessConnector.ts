@@ -43,6 +43,9 @@ export class MongoStateLessConnector implements PkStorage.IMongoConnector {
     if (!this.connection) {
       this.connection = await MongoClient.connect(this.storage, {
         useNewUrlParser: true,
+        useUnifiedTopology: true,
+        reconnectTries: 60,
+        reconnectInterval: 1000,
       });
     }
 
