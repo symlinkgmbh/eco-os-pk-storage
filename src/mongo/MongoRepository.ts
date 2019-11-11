@@ -50,7 +50,7 @@ export class MongoRepository<T> implements PkStorage.IMongoRepository<T>, PkStor
 
   public async create(item: T): Promise<ObjectID> {
     const collection: Collection = await this.mongoConnector.getCollection();
-    const result: InsertOneWriteOpResult = await collection.insertOne(item);
+    const result: InsertOneWriteOpResult<any> = await collection.insertOne(item);
     return result.insertedId;
   }
 

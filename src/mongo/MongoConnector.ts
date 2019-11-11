@@ -55,6 +55,7 @@ export class MongoConnector implements PkStorage.IMongoConnector {
         useUnifiedTopology: true,
         reconnectTries: 60,
         reconnectInterval: 1000,
+        autoReconnect: true,
       });
     }
 
