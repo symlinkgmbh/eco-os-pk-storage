@@ -17,7 +17,10 @@
 
 
 
-export * from "./StorageContainer";
-export * from "./StorageTypes";
-export { IAbstractBindings } from "./IAbstractBindings";
-export { AbstractBindings } from "./AbstractBindings";
+import { Container } from "inversify";
+
+export interface IAbstractBindings {
+  getContainer(): Container;
+  initDynamicBinding(types: Array<string | symbol>, values: Array<any>): void;
+  initStaticBinding(types: Array<string | symbol>, values: Array<any>): void;
+}
